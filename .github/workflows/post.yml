@@ -1,0 +1,61 @@
+name: Instagram自動投稿
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 毎日 日本時間の20:00（UTC 11:00）
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "投稿する日付（YYYY-MM-DD）。空なら今日"
+        required: false
+      dry_run:
+        description: "true なら投稿せず確認だけ"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram-post
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 投稿する
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          NEW_TOKEN_FILE: ${{ runner.temp }}/new_token.txt
+          INPUT_DATE: ${{ github.event.inputs.date }}
+          DRY: ${{ github.event.inputs.dry_run }}
+        run: |
+          ARGS=""
+          if [ -n "$INPUT_DATE" ]; then ARGS="$ARGS --date $INPUT_DATE"; fi
+          if [ "$DRY" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          CHECK_URLS=1 python3 post_instagram.py $ARGS
+
+      - name: 投稿済みの記録を保存
+        if: always()
+        run: |
+          if [ -n "$(git status --porcelain posted.json)" ]; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@users.noreply.github.com"
+            git add posted.json
+            git commit -m "投稿済みを記録"
+            git push
+          fi
+
+      - name: トークンが更新されていたらSecretsを更新（GH_PATを設定した場合のみ）
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          NEW_TOKEN_FILE: ${{ runner.temp }}/new_token.txt
+        run: |
+          if [ -n "$GH_TOKEN" ] && [ -f "$NEW_TOKEN_FILE" ]; then
+            gh secret set IG_TOKEN --repo "$GITHUB_REPOSITORY" < "$NEW_TOKEN_FILE"
+            echo "IG_TOKEN を更新しました"
+          fi
