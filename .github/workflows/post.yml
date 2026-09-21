@@ -23,6 +23,8 @@ concurrency:
 jobs:
   post:
     runs-on: ubuntu-latest
+    env:
+      APP_DIR: "画像素材/インスタ自動投稿"
     steps:
       - uses: actions/checkout@v4
 
@@ -30,21 +32,22 @@ jobs:
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           NEW_TOKEN_FILE: ${{ runner.temp }}/new_token.txt
+          IMAGE_BASE_URL: "https://raw.githubusercontent.com/${{ github.repository }}/main/%E7%94%BB%E5%83%8F%E7%B4%A0%E6%9D%90/%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E8%87%AA%E5%8B%95%E6%8A%95%E7%A8%BF"
           INPUT_DATE: ${{ github.event.inputs.date }}
           DRY: ${{ github.event.inputs.dry_run }}
         run: |
           ARGS=""
           if [ -n "$INPUT_DATE" ]; then ARGS="$ARGS --date $INPUT_DATE"; fi
           if [ "$DRY" = "true" ]; then ARGS="$ARGS --dry-run"; fi
-          CHECK_URLS=1 python3 post_instagram.py $ARGS
+          CHECK_URLS=1 python3 "$APP_DIR/post_instagram.py" $ARGS
 
       - name: 投稿済みの記録を保存
         if: always()
         run: |
-          if [ -n "$(git status --porcelain posted.json)" ]; then
+          if [ -n "$(git status --porcelain "$APP_DIR/posted.json")" ]; then
             git config user.name "github-actions"
             git config user.email "github-actions@users.noreply.github.com"
-            git add posted.json
+            git add "$APP_DIR/posted.json"
             git commit -m "投稿済みを記録"
             git push
           fi
