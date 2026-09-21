@@ -5,6 +5,7 @@
   python post_instagram.py              # 今日（日本時間）の投稿を公開
   python post_instagram.py --dry-run    # 投稿せず、内容と画像URLの確認だけ
   python post_instagram.py --date 2026-10-21   # 日付を指定
+  python post_instagram.py --check      # トークンの確認だけ（投稿はしない）
 
 必要な環境変数:
   IG_TOKEN            Instagramのアクセストークン（GitHubのSecretsに保存）
@@ -91,7 +92,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--date", help="YYYY-MM-DD（省略時は日本時間の今日）")
+    ap.add_argument("--check", action="store_true",
+                    help="トークンの確認だけ（アカウント名を取得。投稿はしない）")
     a = ap.parse_args()
+
+    if a.check:
+        token = os.environ.get("IG_TOKEN")
+        if not token:
+            raise SystemExit("IG_TOKEN が設定されていません")
+        me = call("GET", "me", {"fields": "user_id,username"}, token)
+        print(f"トークンOK: @{me.get('username')} ({me.get('user_id') or me.get('id')})")
+        print("（check: 投稿はしていません）")
+        return
 
     today = a.date or datetime.datetime.now(JST).strftime("%Y-%m-%d")
     posts = json.load(open(os.path.join(ROOT, "posts.json"), encoding="utf-8"))
