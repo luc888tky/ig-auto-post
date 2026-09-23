@@ -1,1 +1,2 @@
-google-genai>=0.3.0
+# 画像生成をCloudflare Workers AI(標準ライブラリのurllibのみ使用)に切り替えたため、
+# 現時点で追加の外部ライブラリは不要です。
