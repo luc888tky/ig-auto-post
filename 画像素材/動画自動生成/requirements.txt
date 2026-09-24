@@ -1,2 +1,3 @@
-# 画像生成をCloudflare Workers AI(標準ライブラリのurllibのみ使用)に切り替えたため、
-# 現時点で追加の外部ライブラリは不要です。
+# 画像生成は標準ライブラリ（urllib）のみで動作します。
+# Instagram Stories投稿機能（post_story.py）でR2アップロードに boto3 を使用します。
+boto3
