@@ -20,13 +20,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: 依存パッケージのインストール
-        run: pip install boto3
-      - name: 次の1本をInstagram Storiesに投稿
+      - name: 次の1本をInstagram/TikTok/YouTube Shortsに投稿
         env:
+          # Instagram（必須）
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+          # Instagram Reelsにも投稿するか（true/false）
+          IG_POST_REELS: ${{ vars.IG_POST_REELS }}
+          # TikTok（任意・設定されていれば投稿する）
+          TIKTOK_ACCESS_TOKEN: ${{ secrets.TIKTOK_ACCESS_TOKEN }}
+          TIKTOK_PRIVACY_LEVEL: ${{ vars.TIKTOK_PRIVACY_LEVEL }}
+          # YouTube Shorts（任意・設定されていれば投稿する）
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_PRIVACY_STATUS: ${{ vars.YOUTUBE_PRIVACY_STATUS }}
         run: python "$APP_DIR/daily_post.py"
       - name: 投稿進捗をリポジトリに保存
         run: |
