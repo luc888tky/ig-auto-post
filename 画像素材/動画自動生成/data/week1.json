@@ -4,8 +4,12 @@
     {
       "day": 1,
       "angle": "無料で読めるジャンルまとめ",
-      "narration": "電子コミックアプリって、実は無料で読めるジャンルがすごく幅広いんです。恋愛、ミステリー、ファンタジー…気になるジャンルだけでも覗いてみる価値、あります。",
-      "image_prompt_en": "Soft flat-lay illustration of a smartphone screen showing a colorful comic app interface with genre category icons (romance, mystery, fantasy), warm cozy lighting, minimalist digital art style, no readable text, no specific characters",
+      "narration": "実は電子コミックアプリって、無料で読めるジャンルがすごく幅広いんです。恋愛、ミステリー、ファンタジー…気になるジャンルだけでも覗いてみる価値、あります。",
+      "images": [
+        {"prompt": "Soft flat-lay illustration of a smartphone screen lighting up in a dark cozy room, warm glow, minimalist digital art style, no readable text, no specific characters"},
+        {"prompt": "Soft flat-lay illustration of a smartphone screen showing a colorful comic app interface with genre category icons (romance, mystery, fantasy), warm cozy lighting, minimalist digital art style, no readable text, no specific characters"},
+        {"prompt": "Close-up flat illustration of three glowing genre icons (heart for romance, magnifying glass for mystery, star for fantasy) arranged in a row, pastel colors, clean minimal vector style, no text"}
+      ],
       "telop": ["電子コミックの無料ジャンル、意外と幅広い", "恋愛・ミステリー・ファンタジー…", "気になるジャンルだけでも覗いてみて"],
       "bgm_mood": "lofi",
       "cta": "プロフィールのリンクから覗いてみて"
@@ -13,8 +17,12 @@
     {
       "day": 2,
       "angle": "雨の日にハマりやすい作品の傾向",
-      "narration": "雨の日って、なぜかじっくり読める日でもあるんですよね。実はそういう日に伸びるのが、じんわり心に残る系のヒューマンドラマ作品なんです。",
-      "image_prompt_en": "Cozy room interior, rain visible on window, soft warm lamp light, an open book and a smartphone resting on a table, minimalist illustration style, no people visible, no text",
+      "narration": "雨の日って、実はじっくり読める日でもあるんですよね。そういう日に伸びるのが、じんわり心に残る系のヒューマンドラマ作品なんです。",
+      "images": [
+        {"prompt": "Cozy room interior, rain visible on window, soft warm lamp light, minimalist illustration style, no people visible, no text"},
+        {"prompt": "Cozy room interior close-up, an open book and a smartphone resting on a table near the rainy window, warm lamp light, minimalist illustration style, no text"},
+        {"prompt": "Minimalist illustration of a warm cup of tea beside a smartphone showing a soft glowing screen, rainy window blurred in background, cozy mood, no text"}
+      ],
       "telop": ["雨の日、実は\"読書日和\"", "伸びるのはヒューマンドラマ系", "気になったら覗いてみて"],
       "bgm_mood": "piano",
       "cta": "保存して次の雨の日に"
@@ -23,7 +31,11 @@
       "day": 3,
       "angle": "無料キャンペーンの仕組み解説",
       "narration": "電子コミックアプリの無料キャンペーンって、実は新規登録するだけで話数がもらえる仕組みが多いんです。課金する前に、まずこの仕組みを知っておくとお得です。",
-      "image_prompt_en": "Flat icon-style infographic illustration showing a simple 3-step process: phone icon, gift/ticket icon, open book icon, connected by arrows, clean minimal vector style, soft pastel colors, no text",
+      "images": [
+        {"prompt": "Flat icon-style illustration of a single smartphone icon glowing, clean minimal vector style, soft pastel colors, no text"},
+        {"prompt": "Flat icon-style infographic illustration showing a simple 3-step process: phone icon, gift/ticket icon, open book icon, connected by arrows, clean minimal vector style, soft pastel colors, no text"},
+        {"prompt": "Flat icon-style illustration of a gift/ticket icon opening up with sparkles, clean minimal vector style, soft pastel colors, no text"}
+      ],
       "telop": ["無料キャンペーンの仕組み、知ってる?", "新規登録だけで話数がもらえることも", "課金前にまず知っておきたい"],
       "bgm_mood": "pop",
       "cta": "詳しくはプロフィールから"
@@ -32,7 +44,11 @@
       "day": 4,
       "angle": "配信サービスの違い、ざっくり解説",
       "narration": "動画配信サービスって、実は独占配信の作品がサービスごとに全然違うんです。「どこで見れるんだっけ」を減らすために、ざっくり傾向を知っておくと便利です。",
-      "image_prompt_en": "Simple flat illustration of three different generic streaming app icons on a phone screen, each with a subtle distinct color theme, minimalist vector style, no logos, no text, no brand references",
+      "images": [
+        {"prompt": "Simple flat illustration of a single generic streaming app icon glowing on a phone screen, minimalist vector style, no logos, no text"},
+        {"prompt": "Simple flat illustration of three different generic streaming app icons on a phone screen, each with a subtle distinct color theme, minimalist vector style, no logos, no text, no brand references"},
+        {"prompt": "Simple flat illustration of a question mark icon above a phone screen with app icons, minimalist vector style, no logos, no text"}
+      ],
       "telop": ["配信サービス、実は\"得意ジャンル\"が違う", "傾向を知っておくと迷わない", "まとめて紹介します"],
       "bgm_mood": "info",
       "cta": "迷ったらこの投稿を見返してね"
@@ -41,7 +57,11 @@
       "day": 5,
       "angle": "スキマ時間に電子コミックが向いてる理由",
       "narration": "電子コミックって1話が短いから、実は通勤や待ち時間みたいなスキマ時間に一番向いてるコンテンツなんです。",
-      "image_prompt_en": "Minimalist illustration of a hand holding a smartphone with a simple comic-reading app UI open, small clock icon nearby suggesting short time, clean flat design, soft colors, no readable text, no specific characters",
+      "images": [
+        {"prompt": "Minimalist illustration of a small clock icon next to a smartphone, clean flat design, soft colors, no readable text, no specific characters"},
+        {"prompt": "Minimalist illustration of a hand holding a smartphone with a simple comic-reading app UI open, small clock icon nearby suggesting short time, clean flat design, soft colors, no readable text, no specific characters"},
+        {"prompt": "Minimalist illustration of a train window scene with a smartphone in foreground, soft colors, clean flat design, no text, no faces"}
+      ],
       "telop": ["スキマ時間、何に使う?", "電子コミックは1話が短い", "実はスキマ時間向きのコンテンツ"],
       "bgm_mood": "upbeat",
       "cta": "気になる人はプロフィールから"
@@ -50,7 +70,11 @@
       "day": 6,
       "angle": "家族で使うVODの便利機能",
       "narration": "VODサービスって、実はプロフィールを分けて使える機能があるものが多いんです。家族それぞれ好きな作品を管理できるので、地味に便利です。",
-      "image_prompt_en": "Flat illustration of a generic streaming app interface showing multiple simple profile avatar icons in a row, cozy living room mood in the background, minimalist vector style, no text, no real faces",
+      "images": [
+        {"prompt": "Flat illustration of a single simple profile avatar icon glowing on a phone screen, cozy living room mood in background, minimalist vector style, no text, no real faces"},
+        {"prompt": "Flat illustration of a generic streaming app interface showing multiple simple profile avatar icons in a row, cozy living room mood in the background, minimalist vector style, no text, no real faces"},
+        {"prompt": "Flat illustration of a cozy living room sofa scene with a TV screen glowing softly in the background, minimalist vector style, no text, no real faces"}
+      ],
       "telop": ["VODの\"プロフィール分け\"機能", "家族それぞれ好きな作品を管理", "地味に便利な機能"],
       "bgm_mood": "warm",
       "cta": "気になったら覗いてみて"
@@ -59,7 +83,11 @@
       "day": 7,
       "angle": "今週のまとめ",
       "narration": "今週紹介した情報をまとめました。気になっていたものがあれば、この投稿を保存して週末にゆっくりチェックしてみてください。",
-      "image_prompt_en": "Flat minimalist illustration of a simple checklist or bookmark icon with small icons representing books, a phone, and streaming, pastel color palette, clean vector style, no text, no specific characters",
+      "images": [
+        {"prompt": "Flat minimalist illustration of a simple bookmark icon glowing, pastel color palette, clean vector style, no text, no specific characters"},
+        {"prompt": "Flat minimalist illustration of a simple checklist icon with small icons representing books, a phone, and streaming, pastel color palette, clean vector style, no text, no specific characters"},
+        {"prompt": "Flat minimalist illustration of a calendar icon with a weekend highlighted, pastel color palette, clean vector style, no text"}
+      ],
       "telop": ["今週のまとめ", "① ジャンル紹介 ② 雨の日の傾向 ③ 無料の仕組み …", "保存して週末にチェック"],
       "bgm_mood": "outro",
       "cta": "保存して週末にチェックしてね"
