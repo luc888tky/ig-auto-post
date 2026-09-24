@@ -7,6 +7,11 @@ on:
         description: "台本データのファイル名（画像素材/動画自動生成/配下、例: week1.json）"
         required: true
         default: "week1.json"
+      post_to_instagram:
+        description: "生成した動画をInstagram Storiesに自動投稿する"
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -24,27 +29,21 @@ jobs:
           - 50021:50021
     steps:
       - uses: actions/checkout@v4
-
       - name: Python セットアップ
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: 依存パッケージのインストール
-        run: |
-          pip install -r "$APP_DIR/requirements.txt"
-
+        run: pip install -r "$APP_DIR/requirements.txt"
       - name: 日本語フォントの確認（テロップの文字化け防止）
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
-
       - name: ffmpegのインストール（動画組み立て用）
         run: |
           sudo apt-get install -y ffmpeg
           ffmpeg -version
           ffprobe -version
-
       - name: VOICEVOX ENGINEの起動待ち
         run: |
           for i in $(seq 1 30); do
@@ -54,14 +53,12 @@ jobs:
             echo "waiting for VOICEVOX ENGINE... ($i)"; sleep 2
           done
           echo "VOICEVOX ENGINE did not become ready in time"; exit 1
-
       - name: ① ナレーション音声を生成（VOICEVOX・無料）
         run: |
           python "$APP_DIR/voicevox_narrate.py" \
             --data "$APP_DIR/data/${{ github.event.inputs.week_file }}" \
             --out-dir out/audio \
             --engine-url http://localhost:50021
-
       - name: ② 静止画を生成（Cloudflare Workers AI・無料枠）
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -70,7 +67,6 @@ jobs:
           python "$APP_DIR/generate_images.py" \
             --data "$APP_DIR/data/${{ github.event.inputs.week_file }}" \
             --out-dir out/images
-
       - name: ③ 動画を組み立て（ffmpeg・無料）
         run: |
           python "$APP_DIR/assemble_video.py" \
@@ -79,10 +75,24 @@ jobs:
             --image-dir out/images \
             --out-dir out/videos \
             --bgm-dir "$APP_DIR/bgm"
-
       - name: 完成した動画をアップロード
         uses: actions/upload-artifact@v4
         with:
           name: videos-${{ github.event.inputs.week_file }}
           path: out/videos/*.mp4
           retention-days: 14
+      - name: ④ Instagram Storiesへ投稿（任意）
+        if: ${{ github.event.inputs.post_to_instagram == 'true' }}
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: |
+          for video in out/videos/*.mp4; do
+            echo "投稿中: $video"
+            python "$APP_DIR/post_story.py" --video "$video"
+          done
