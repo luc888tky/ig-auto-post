@@ -7,11 +7,6 @@ on:
         description: "台本データのファイル名（画像素材/動画自動生成/配下、例: week1.json）"
         required: true
         default: "week1.json"
-      post_to_instagram:
-        description: "生成した動画をInstagram Storiesに自動投稿する"
-        required: true
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -75,24 +70,19 @@ jobs:
             --image-dir out/images \
             --out-dir out/videos \
             --bgm-dir "$APP_DIR/bgm"
-      - name: 完成した動画をアップロード
+      - name: 完成した動画をアップロード（GitHub Actionsの保管用）
         uses: actions/upload-artifact@v4
         with:
           name: videos-${{ github.event.inputs.week_file }}
           path: out/videos/*.mp4
           retention-days: 14
-      - name: ④ Instagram Storiesへ投稿（任意）
-        if: ${{ github.event.inputs.post_to_instagram == 'true' }}
+      - name: ④ 動画をCloudflare R2へアップロード（Instagram自動投稿の素材置き場）
         env:
-          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
-          IG_USER_ID: ${{ secrets.IG_USER_ID }}
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
-          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
         run: |
-          for video in out/videos/*.mp4; do
-            echo "投稿中: $video"
-            python "$APP_DIR/post_story.py" --video "$video"
-          done
+          python "$APP_DIR/upload_to_r2.py" \
+            --video-dir out/videos \
+            --week-file "${{ github.event.inputs.week_file }}"
