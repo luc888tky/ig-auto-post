@@ -30,8 +30,18 @@ import urllib.parse
 from pathlib import Path
 
 
-def synth_one(engine_url: str, text: str, speaker: int, out_path: Path, retries: int = 3) -> None:
-    """1件のテキストをVOICEVOX ENGINEで音声化してout_pathに保存する。"""
+def synth_one(
+    engine_url: str,
+    text: str,
+    speaker: int,
+    out_path: Path,
+    speed: float = 1.2,
+    retries: int = 3,
+) -> None:
+    """1件のテキストをVOICEVOX ENGINEで音声化してout_pathに保存する。
+
+    speed: 話速倍率(VOICEVOXのspeedScale)。1.0が標準、大きいほど速い。
+    """
     query_url = f"{engine_url}/audio_query?speaker={speaker}&text={urllib.parse.quote(text)}"
     last_err = None
     for attempt in range(1, retries + 1):
@@ -40,6 +50,11 @@ def synth_one(engine_url: str, text: str, speaker: int, out_path: Path, retries:
             req = urllib.request.Request(query_url, method="POST")
             with urllib.request.urlopen(req, timeout=30) as resp:
                 query = resp.read()
+
+            # 話速を調整する(speedScaleを書き換える)
+            query_obj = json.loads(query)
+            query_obj["speedScale"] = speed
+            query = json.dumps(query_obj).encode("utf-8")
 
             # 2) synthesis: クエリから実際の音声(wav)を作る
             synth_url = f"{engine_url}/synthesis?speaker={speaker}"
@@ -65,6 +80,12 @@ def main() -> int:
     ap.add_argument("--out-dir", required=True, help="wav出力先ディレクトリ")
     ap.add_argument("--engine-url", default="http://localhost:50021", help="VOICEVOX ENGINEのURL")
     ap.add_argument("--speaker", type=int, default=3, help="話者ID(既定: ずんだもん ノーマル=3)")
+    ap.add_argument(
+        "--speed",
+        type=float,
+        default=1.2,
+        help="話速倍率(既定: 1.2倍。1.0が標準速度)",
+    )
     args = ap.parse_args()
 
     data = json.loads(Path(args.data).read_text(encoding="utf-8"))
@@ -81,7 +102,7 @@ def main() -> int:
         text = d["narration"]
         out_path = out_dir / f"day{day_no}.wav"
         print(f"[day {day_no}] 音声生成中: {text[:24]}...")
-        synth_one(args.engine_url, text, args.speaker, out_path)
+        synth_one(args.engine_url, text, args.speaker, out_path, speed=args.speed)
         print(f"  -> {out_path}")
 
     print(f"完了: {len(days)}件の音声を {out_dir} に出力しました")
