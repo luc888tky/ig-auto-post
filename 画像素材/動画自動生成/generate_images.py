@@ -125,15 +125,28 @@ def main() -> int:
         print("[error] week_data.json に days がありません", file=sys.stderr)
         return 1
 
+    total_images = 0
     for d in days:
         day_no = d["day"]
-        prompt = d["image_prompt_en"]
-        out_path = out_dir / f"day{day_no}.png"
-        print(f"[day {day_no}] 画像生成中: {prompt[:40]}...")
-        generate_one(account_id, api_token, args.model, prompt, args.steps, out_path)
-        print(f"  -> {out_path}")
+        # 新形式: "images": [{"prompt": "..."}, ...] (2〜3秒ごとのカット割り用に複数枚)
+        # 旧形式: "image_prompt_en": "..." (1日1枚) にも後方互換で対応する
+        images = d.get("images")
+        if images:
+            prompts = [im["prompt"] for im in images]
+        else:
+            prompts = [d["image_prompt_en"]]
 
-    print(f"完了: {len(days)}件の画像を {out_dir} に出力しました")
+        for idx, prompt in enumerate(prompts, start=1):
+            if len(prompts) == 1:
+                out_path = out_dir / f"day{day_no}.png"
+            else:
+                out_path = out_dir / f"day{day_no}_{idx}.png"
+            print(f"[day {day_no} / {idx}] 画像生成中: {prompt[:40]}...")
+            generate_one(account_id, api_token, args.model, prompt, args.steps, out_path)
+            print(f"  -> {out_path}")
+            total_images += 1
+
+    print(f"完了: {total_images}枚の画像を {out_dir} に出力しました")
     return 0
 
 
