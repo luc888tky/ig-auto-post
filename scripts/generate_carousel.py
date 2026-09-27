@@ -11,7 +11,7 @@ import time
 import requests
 
 API_KEY = os.environ["GEMINI_API_KEY"]
-MODEL = "gemini-2.5-flash-image-preview"
+MODEL = "gemini-3.1-flash-image"
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 
 def generate_one(prompt: str) -> bytes:
