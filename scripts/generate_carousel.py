@@ -22,21 +22,25 @@ def generate_one(prompt: str) -> bytes:
     body = {
         "contents": [{"parts": [{"text": prompt}]}]
     }
+    last_err = None
     for attempt in range(3):
         res = requests.post(URL, headers=headers, json=body, timeout=120)
+        print(f"  試行{attempt+1}: HTTP {res.status_code}")
         if res.status_code == 200:
             data = res.json()
             parts = data["candidates"][0]["content"]["parts"]
             for p in parts:
                 if "inlineData" in p:
                     return base64.b64decode(p["inlineData"]["data"])
-            raise RuntimeError(f"画像データが見つかりません: {data}")
+            raise RuntimeError(f"画像データが見つかりません: {json.dumps(data)[:800]}")
         elif res.status_code in (429, 503):
+            last_err = f"HTTP {res.status_code}: {res.text[:800]}"
+            print(f"  レート制限/一時エラー: {last_err}")
             time.sleep(10 * (attempt + 1))
             continue
         else:
-            raise RuntimeError(f"APIエラー {res.status_code}: {res.text[:500]}")
-    raise RuntimeError("リトライ上限に達しました")
+            raise RuntimeError(f"APIエラー {res.status_code}: {res.text[:800]}")
+    raise RuntimeError(f"リトライ上限に達しました。最後のエラー: {last_err}")
 
 def main():
     prompts_path = sys.argv[1]
