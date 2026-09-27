@@ -1,0 +1,33 @@
+name: カルーセル画像生成（Gemini）
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompts_file:
+        description: "プロンプトJSONのパス (例: scripts/prompts/d8.json)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 依存関係インストール
+        run: pip install requests
+      - name: 画像生成
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/generate_carousel.py "${{ inputs.prompts_file }}"
+      - name: 確認用フォルダにコミット
+        run: |
+          git config user.name "carousel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "画像素材/インスタ自動投稿/images/pending/"
+          git commit -m "確認用画像を生成: ${{ inputs.prompts_file }}" || echo "no changes"
+          git push
